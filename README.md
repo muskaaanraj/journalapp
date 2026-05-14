@@ -1,4 +1,3 @@
-# journalapp
 # Journal App
 
 A lightweight **RESTful Journal API** built with **Spring Boot** that allows users to create and retrieve personal journal entries.
