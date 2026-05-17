@@ -1,144 +1,114 @@
-# Journal App
+#  Journal App
 
-A lightweight **RESTful Journal API** built with **Spring Boot** that allows users to create and retrieve personal journal entries.
-
+A REST API built with **Spring Boot** and **MongoDB** that allows users to create, read, update, and delete journal entries.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Language | Java |
-| Framework | Spring Boot |
-| Build Tool | Maven |
-| Architecture | REST API |
-| Storage | In-Memory (HashMap) |
+- **Java** with Spring Boot 4.0.6
+- **MongoDB** 8.3.2 (NoSQL Database)
+- **Spring Data MongoDB**
+- **Maven** (Build Tool)
+- **Mongosh** 2.8.3
 
----
-
-## Project Structure
+##  Project Structure
 
 ```
 journalApp/
-├── src/
-│   └── main/
-│       └── java/
-│           └── com/example/journalApp/
-│               ├── controller/
-│               │   ├── JavaEntryController.java   # Journal CRUD endpoints
-│               │   └── HealthCheck.java            # Health check endpoint
-│               ├── entity/
-│               │   └── JournalEntry.java           # Journal entry model
-│               └── JournalApplication.java         # Main application entry point
-└── pom.xml
+├── src/main/java/com/example/journalApp/
+│   ├── controller/
+│   │   ├── HealthCheck.java
+│   │   └── JavaEntryControllerV2.java
+│   ├── entity/
+│   │   └── JournalEntry.java
+│   ├── repository/
+│   │   └── JavaEntryRepository.java
+│   ├── service/
+│   │   └── JournalEntryService.java
+│   └── JournalApplication.java
+└── src/main/resources/
+    └── application.properties
 ```
 
----
+##  Configuration
 
-## API Endpoints
+```properties
+spring.application.name=journalApp
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=27017
+spring.data.mongodb.database=journaldb
+```
 
-### Base URL: `http://localhost:8080`
+##  Getting Started
 
-| Method | Endpoint | Description | Request Body |
-|--------|----------|-------------|--------------|
-| `GET` | `/journal` | Fetch all journal entries | None |
-| `POST` | `/journal` | Create a new journal entry | JSON (see below) |
-| `GET` | `/health` | Check if server is running | None |
+### Prerequisites
+- Java 17+
+- MongoDB installed and running
+- Maven
 
----
+### Run the App
 
-### Request & Response Examples
+1. **Clone the repository**
+```bash
+git clone https://github.com/muskaaanraj/journalapp.git
+cd journalapp
+```
 
-#### Create a Journal Entry
+2. **Start MongoDB**
+```bash
+mongosh
+```
+
+3. **Run the Spring Boot app**
+```bash
+./mvnw spring-boot:run
+```
+
+App runs on: `http://localhost:8080`
+
+##  API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/journal` | Get all journal entries |
+| POST | `/journal` | Create a new entry |
+| GET | `/journal/id/{id}` | Get entry by ID |
+| PUT | `/journal/id/{id}` | Update entry by ID |
+| DELETE | `/journal/id/{id}` | Delete entry by ID |
+
+## Sample Request
+
 **POST** `/journal`
 
 ```json
 {
-  "id": 1,
-  "title": "Morning",
-  "content": "I am happy"
+  "title": "My First Entry",
+  "content": "Today I built a Spring Boot API with MongoDB!"
 }
 ```
 
-**Response:** `true`
-
----
-
-#### 📋 Get All Journal Entries
-**GET** `/journal`
-
-**Response:**
+**Response**
 ```json
-[
-  {
-    "id": 1,
-    "title": "Morning",
-    "content": "I am happy"
-  }
-]
+{
+  "id": "6a09f1f1d322e22b52a69caa",
+  "title": "My First Entry",
+  "content": "Today I built a Spring Boot API with MongoDB!",
+  "date": "2026-05-17T22:35:30"
+}
 ```
 
----
+##  Database
 
-## Getting Started
+Data is stored in MongoDB under:
+- **Database:** `journaldb`
+- **Collection:** `journalEntries`
 
-### Prerequisites
-
-- Java 17+
-- Maven 3.x
-- IntelliJ IDEA (recommended)
-
-### Run Locally
-
-```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/journalApp.git
-
-# Navigate into the project
-cd journalApp
-
-# Build the project
-mvn clean install
-
-# Run the application
-mvn spring-boot:run
+To verify data in mongosh:
+```js
+use journaldb
+show collections
+db.journalEntries.find().pretty()
 ```
 
-The server will start at **`http://localhost:8080`**
+## Author
 
----
-
-## Testing the API
-
-You can test the endpoints using:
-- **Postman** — send GET/POST requests to `localhost:8080/journal`
-- **curl:**
-
-```bash
-# GET all entries
-curl http://localhost:8080/journal
-
-# POST a new entry
-curl -X POST http://localhost:8080/journal \
-  -H "Content-Type: application/json" \
-  -d '{"id":1,"title":"Morning","content":"I am happy"}'
-```
-
----
-
-##  Limitations
-
-- Data is stored **in-memory** — all entries are lost when the server restarts
-- No authentication or authorization implemented yet
-- No database integration (planned for future versions)
-
----
-
-##  Future Improvements
-
-- [ ] Integrate MongoDB or MySQL for persistent storage
-- [ ] Add user authentication (Spring Security + JWT)
-- [ ] Add input validation
-- [ ] Write unit and integration tests
-
----
-
+**Muskaan Raj** — [@muskaaanraj](https://github.com/muskaaanraj)
